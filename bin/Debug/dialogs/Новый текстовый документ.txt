@@ -1,0 +1,381 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <string>
+#include "menu.h"
+#include <sstream>
+#include <iostream>
+#include <fstream>
+using namespace sf;
+using namespace std;
+bool mouseActive = true;
+
+
+void loadingScreen(CircleShape loadCircle,RenderWindow & win,Sprite & gameBg,Texture & gameBackground){
+    gameBg.setColor(Color::Transparent);
+    int counter = 0;
+    loadCircle.setPosition(25,360);
+    while (counter<= 570){
+        win.clear(Color::Black);
+        if (counter%5==0) loadCircle.move(10,0);
+        //start.restart();
+        //counter +=  start.getElapsedTime().asMilliseconds();
+        counter++;
+        std::cout << counter << std::endl;
+
+        win.draw(loadCircle);
+        win.display();
+
+     }
+    gameBg.setColor(Color::White);
+    gameBg.setTexture(gameBackground);
+}
+
+void Dialogs(RenderWindow & win, CircleShape & circle, int & ch, ifstream & text, bool & mouse){
+
+    Font font;
+    font.loadFromFile("9420.ttf");
+    Text dialogsText("",font,14);
+    char buff[500];
+    int i =0;
+
+        text.getline(buff,500,'\n');
+        cout << buff;
+        ostringstream goldString;
+        goldString << buff;
+        dialogsText.setString(goldString.str());
+
+    dialogsText.setPosition(100,600);
+    dialogsText.setColor(Color::White);
+	dialogsText.setStyle(Text::Bold);
+	win.draw(dialogsText);
+	mouse = false;
+
+}
+
+class Persone {
+public:
+	float x, y, w, h, dx, dy;
+	Image image;
+	Texture texture;
+	Sprite sprite;
+	Persone(Image &image, float X, float Y, float W, float H, String name){
+		w = W; h = H;
+		texture.loadFromImage(image);
+        sprite.setTexture(texture);
+		x = X; y = Y;
+		sprite.setPosition(x,y);
+	}
+};
+
+int main(){
+    RenderWindow window(VideoMode(1280, 720), "Arodzero",Style::None);
+   //  window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
+    setlocale(LC_ALL, "RUS");
+   // bool stop = true;
+    ifstream text;
+    text.open("dialogs/dialogs.txt");
+
+    Text out;
+
+    CircleShape loading;
+    loading.setRadius(32);
+    loading.setFillColor(Color::Cyan);
+    Texture gameBackground;
+    Texture dialogBox;
+    Texture nextButtonTexture;
+
+    dialogBox.loadFromFile("images/dialog.png");
+    nextButtonTexture.loadFromFile("images/next.png");
+    gameBackground.loadFromFile("images/Igra_Tema.jpg");
+
+
+    CircleShape nextButton;
+    RectangleShape rectangle(Vector2f(120.f, 50.f));
+
+    nextButton.setRadius(32);
+    rectangle.setSize(Vector2f(1200.f, 200.f));
+
+    nextButton.setPosition(1205, 600);
+    rectangle.setPosition(25,540);
+
+    nextButton.setTexture(&nextButtonTexture);
+    rectangle.setTexture(&dialogBox);
+
+	Sprite gameBg(gameBackground);
+    gameBg.setPosition(0, 0);
+
+
+
+
+    //loadingScreen(loading, window, gameBg, gameBackground);
+    //window.setActive();
+    //Texture loadingTexture;
+    //loadingTexture.loadFromFile("images/loading.png");
+    //loading.setTexture(&loadingTexture);
+
+   /* SoundBuffer shootBuffer;
+    shootBuffer.loadFromFile("audio/music.ogg");
+    Sound shoot(shootBuffer);
+    shoot.play();*/
+
+   /*  sf::Music music;
+    if (!music.openFromFile("audio/OST_1.ogg"))
+        return EXIT_FAILURE;
+
+    // Play the music
+    music.play(); */
+
+   // choise(window);
+	menu(window);
+
+    Image directorImage;
+	directorImage.loadFromFile("images/director-bg.png");
+
+    Persone director (directorImage, 38, 185, 200.0, 400.0, "gamer");
+
+    while (window.isOpen())
+    {
+        Clock gameClock;
+		gameClock.restart();
+		int time = time / 700;
+        Event event;
+        while (window.pollEvent(event))
+        {
+            // Close window: exit
+            if (event.type == Event::Closed)
+                window.close();
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			menu(window);
+
+		}
+
+		window.clear(Color::White);
+		window.draw(gameBg);
+        window.draw(director.sprite);
+        window.draw(rectangle);
+
+		//window.clear(Color(242, 131, 236));
+        int choice= 0;
+        if (IntRect(1205, 600, 64, 64).contains(Mouse::getPosition(window))) {  choice = 1; }
+        else {choice=0;}
+        if (Mouse::isButtonPressed(Mouse::Left) && choice==1 && mouseActive)
+		{
+		    nextButton.setFillColor(Color::Cyan);
+            Dialogs(window, nextButton, choice, text, mouseActive);
+
+		}
+		window.draw(nextButton);
+        int t;
+        while(!Mouse::isButtonPressed(Mouse::Left)){
+        t += time*2;
+        if( t > 1400 ) t = 0;  nextButton.setFillColor(Color::White);mouseActive = true;
+
+        }
+
+        window.display();
+
+    }
+return EXIT_SUCCESS;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <string>
+#include "menu.h"
+#include <sstream>
+#include <iostream>
+#include <fstream>
+using namespace sf;
+using namespace std;
+bool mouseActive = true;
+
+
+void loadingScreen(CircleShape loadCircle,RenderWindow & win,Sprite & gameBg,Texture & gameBackground){
+    gameBg.setColor(Color::Transparent);
+    int counter = 0;
+    loadCircle.setPosition(25,360);
+    while (counter<= 570){
+        win.clear(Color::Black);
+        if (counter%5==0) loadCircle.move(10,0);
+        //start.restart();
+        //counter +=  start.getElapsedTime().asMilliseconds();
+        counter++;
+        std::cout << counter << std::endl;
+
+        win.draw(loadCircle);
+        win.display();
+
+     }
+    gameBg.setColor(Color::White);
+    gameBg.setTexture(gameBackground);
+}
+
+void Dialogs(RenderWindow & win, CircleShape & circle, int & ch, ifstream & text, bool & mouse, Text & test, Font font){
+
+    Text dialogsText("",font,14);
+    char buff[500];
+    int i =0;
+
+        text.getline(buff,500,'\n');
+        cout << buff;
+        ostringstream goldString;
+        goldString << buff;
+        dialogsText.setString(goldString.str());
+
+    dialogsText.setPosition(100,600);
+    dialogsText.setColor(Color::White);
+	dialogsText.setStyle(Text::Bold);
+	test.setString(goldString.str());
+	//win.draw(dialogsText);
+	mouse = false;
+
+}
+
+class Persone {
+public:
+	float x, y, w, h, dx, dy;
+	Image image;
+	Texture texture;
+	Sprite sprite;
+	Persone(Image &image, float X, float Y, float W, float H, String name){
+		w = W; h = H;
+		texture.loadFromImage(image);
+        sprite.setTexture(texture);
+		x = X; y = Y;
+		sprite.setPosition(x,y);
+	}
+};
+
+int main(){
+    RenderWindow window(VideoMode(1280, 720), "Arodzero",Style::None);
+   //  window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
+    setlocale(LC_ALL, "RUS");
+   // bool stop = true;
+    ifstream text;
+    text.open("dialogs/dialogs.txt");
+
+
+    Font font;
+    font.loadFromFile("9420.ttf");
+    Text out("",font,14);
+
+    CircleShape loading;
+    loading.setRadius(32);
+    loading.setFillColor(Color::Cyan);
+    Texture gameBackground;
+    Texture dialogBox;
+    Texture nextButtonTexture;
+
+    dialogBox.loadFromFile("images/dialog.png");
+    nextButtonTexture.loadFromFile("images/next.png");
+    gameBackground.loadFromFile("images/Igra_Tema.jpg");
+
+
+    CircleShape nextButton;
+    RectangleShape rectangle(Vector2f(120.f, 50.f));
+
+    nextButton.setRadius(32);
+    rectangle.setSize(Vector2f(1200.f, 200.f));
+
+    nextButton.setPosition(1205, 600);
+    rectangle.setPosition(25,540);
+
+    nextButton.setTexture(&nextButtonTexture);
+    rectangle.setTexture(&dialogBox);
+
+	Sprite gameBg(gameBackground);
+    gameBg.setPosition(0, 0);
+
+
+
+
+    //loadingScreen(loading, window, gameBg, gameBackground);
+    //window.setActive();
+    //Texture loadingTexture;
+    //loadingTexture.loadFromFile("images/loading.png");
+    //loading.setTexture(&loadingTexture);
+
+   /* SoundBuffer shootBuffer;
+    shootBuffer.loadFromFile("audio/music.ogg");
+    Sound shoot(shootBuffer);
+    shoot.play();*/
+
+   /*  sf::Music music;
+    if (!music.openFromFile("audio/OST_1.ogg"))
+        return EXIT_FAILURE;
+
+    // Play the music
+    music.play(); */
+
+   // choise(window);
+	menu(window);
+
+    Image directorImage;
+	directorImage.loadFromFile("images/director-bg.png");
+
+    Persone director (directorImage, 38, 185, 200.0, 400.0, "gamer");
+
+    while (window.isOpen())
+    {
+        Clock gameClock;
+		gameClock.restart();
+		int time = time / 700;
+        Event event;
+        while (window.pollEvent(event))
+        {
+            // Close window: exit
+            if (event.type == Event::Closed)
+                window.close();
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			menu(window);
+
+		}
+
+		window.clear(Color::White);
+		window.draw(gameBg);
+        window.draw(director.sprite);
+        window.draw(rectangle);
+
+		//window.clear(Color(242, 131, 236));
+        int choice= 0;
+        if (IntRect(1205, 600, 64, 64).contains(Mouse::getPosition(window))) {  choice = 1; }
+        else {choice=0;}
+        if (Mouse::isButtonPressed(Mouse::Left) && choice==1 && mouseActive)
+		{
+		    nextButton.setFillColor(Color::Cyan);
+            Dialogs(window, nextButton, choice, text, mouseActive, out, font);
+
+		}
+		window.draw(nextButton);
+		window.draw(out);
+        int t;
+        while(!Mouse::isButtonPressed(Mouse::Left)){
+        t += time*2;
+        if( t > 1400 ) t = 0;  nextButton.setFillColor(Color::White);mouseActive = true;
+
+        }
+
+        window.display();
+
+    }
+return EXIT_SUCCESS;
+}
